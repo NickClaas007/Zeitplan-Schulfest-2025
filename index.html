@@ -62,32 +62,35 @@
   </div>
   
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    function updateTimeLine() {
-      const timetable = document.getElementById('timetable');
-      const slots = timetable.getElementsByClassName('slot');
-      const now = new Date();
-      const startHour = 8;
-      const endHour = 15;
-      const currentHour = now.getHours() + now.getMinutes() / 60;
+  function updateTimeLine() {
+  const timetable = document.getElementById('timetable');
+  const slots = timetable.getElementsByClassName('slot');
+  const now = new Date();
 
-      if (currentHour < startHour || currentHour > endHour) return;
+  const startHour = 8;
+  const endHour = 12; // bis 11:45 ist letzter Slot → Ende bei 12:00
+  const currentHour = now.getHours();
+  const currentMinute = now.getMinutes();
+  const totalMinutes = (currentHour - startHour) * 60 + currentMinute;
 
-      const totalHours = endHour - startHour;
-      const slotHeight = slots[0].offsetHeight;
-      const percent = (currentHour - startHour) / totalHours;
-      const position = percent * slotHeight * slots.length;
+  if (currentHour < startHour || currentHour >= endHour) return;
 
-      let line = document.querySelector('.time-line');
-      if (!line) {
-        line = document.createElement('div');
-        line.className = 'time-line';
-        timetable.appendChild(line);
-      }
-      line.style.top = `${position}px`;
-    }
+  const slotHeight = slots[0].offsetHeight;
+  const minutesPerSlot = 15;
+  const totalSlots = slots.length;
+  
+  const position = (totalMinutes / minutesPerSlot) * slotHeight;
 
-    // Beim ersten Laden aktualisieren
+  let line = document.querySelector('.time-line');
+  if (!line) {
+    line = document.createElement('div');
+    line.className = 'time-line';
+    timetable.appendChild(line);
+  }
+
+  line.style.top = `${position}px`;
+}
+
     updateTimeLine();
 
     // Dann jede Minute neu aktualisieren
