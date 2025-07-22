@@ -60,35 +60,41 @@
     <div class="slot">11:30 - Example</div>
     <div class="slot">11:45 - Example</div>
   </div>
+  
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    function updateTimeLine() {
+      const timetable = document.getElementById('timetable');
+      const slots = timetable.getElementsByClassName('slot');
+      const now = new Date();
+      const startHour = 8;
+      const endHour = 15;
+      const currentHour = now.getHours() + now.getMinutes() / 60;
 
-  <script>
-  function updateTimeLine() {
-  const timetable = document.getElementById('timetable');
-  const slots = timetable.getElementsByClassName('slot');
-  const now = new Date();
-  const startHour = 8;
-  const endHour = 15;
-  const currentHour = now.getHours() + now.getMinutes() / 60;
+      if (currentHour < startHour || currentHour > endHour) return;
 
-  if (currentHour < startHour || currentHour > endHour) return;
+      const totalHours = endHour - startHour;
+      const slotHeight = slots[0].offsetHeight;
+      const percent = (currentHour - startHour) / totalHours;
+      const position = percent * slotHeight * slots.length;
 
-  const totalHours = endHour - startHour;
-  const slotHeight = slots[0].offsetHeight;
-  const percent = (currentHour - startHour) / totalHours;
-  const position = percent * slotHeight * slots.length;
+      let line = document.querySelector('.time-line');
+      if (!line) {
+        line = document.createElement('div');
+        line.className = 'time-line';
+        timetable.appendChild(line);
+      }
+      line.style.top = `${position}px`;
+    }
 
-  let line = document.querySelector('.time-line');
-  if (!line) {
-    line = document.createElement('div');
-    line.className = 'time-line';
-    timetable.appendChild(line);
-  }
-  line.style.top = `${position}px`;
-}
-
-
+    // Beim ersten Laden aktualisieren
     updateTimeLine();
-    setInterval(updateTimeLine, 60000); // Jede Minute aktualisieren
-  </script>
+
+    // Dann jede Minute neu aktualisieren
+    setInterval(updateTimeLine, 1000);
+  });
+</script>
+
+ 
 </body>
 </html>
