@@ -6,20 +6,46 @@
   <style>
     body {
       font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
     }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding: 10px 40px;
+    }
+
+    .header h2 {
+      margin: 0;
+      text-align: center;
+      flex-grow: 1;
+      font-size: 28px;
+      color: #333;
+    }
+
+    .header img {
+      height: 140px;
+    }
+
     .timetable {
       position: relative;
       width: 600px;
       border: 1px solid #ccc;
-      margin: 20px auto;
+      margin: 0 auto;
       padding: 10px;
+      background-color: #fff;
     }
+
     .slot {
       height: 40px;
       border-bottom: 1px solid #eee;
       padding: 5px;
       position: relative;
+      font-size: 16px;
     }
+
     .time-line {
       position: absolute;
       left: 0;
@@ -31,16 +57,12 @@
   </style>
 </head>
 <body>
-  
- <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-  <img src="gymhip_logo.png" alt="GymHip Logo" style="height: 140px;">
-  
-  <h2 style="margin: 0; text-align: center; flex-grow: 1;">Zeitplan für das Schulfest</h2>
-  
-  <img src="gymhip_logo.png" alt="GymHip Logo" style="height: 140px;">
-</div>
 
-
+  <div class="header">
+    <img src="gymhip_logo.png" alt="GymHip Logo">
+    <h2>Zeitplan für das Schulfest</h2>
+    <img src="gymhip_logo.png" alt="GymHip Logo">
+  </div>
 
   <div class="timetable" id="timetable">
     <div class="slot">08:00 - Example</div>
@@ -60,41 +82,42 @@
     <div class="slot">11:30 - Example</div>
     <div class="slot">11:45 - Example</div>
   </div>
-  
-<script>
-  function updateTimeLine() {
-  const timetable = document.getElementById('timetable');
-  const slots = timetable.getElementsByClassName('slot');
-  const now = new Date();
 
-  const startHour = 8;
-  const endHour = 12; // bis 11:45 ist letzter Slot → Ende bei 12:00
-  const currentHour = now.getHours();
-  const currentMinute = now.getMinutes();
-  const totalMinutes = (currentHour - startHour) * 60 + currentMinute;
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      function updateTimeLine() {
+        const timetable = document.getElementById('timetable');
+        const slots = timetable.getElementsByClassName('slot');
+        const now = new Date();
 
-  if (currentHour < startHour || currentHour >= endHour) return;
+        const startHour = 8;
+        const endHour = 12; // Bis 11:45, letzter Slot → Ende bei 12:00
+        const currentHour = now.getHours();
+        const currentMinute = now.getMinutes();
 
-  const slotHeight = slots[0].offsetHeight;
-  const minutesPerSlot = 15;
-  const totalSlots = slots.length;
-  
-  const position = (totalMinutes / minutesPerSlot) * slotHeight;
+        const totalMinutes = (currentHour - startHour) * 60 + currentMinute;
 
-  let line = document.querySelector('.time-line');
-  if (!line) {
-    line = document.createElement('div');
-    line.className = 'time-line';
-    timetable.appendChild(line);
-  }
+        if (currentHour < startHour || currentHour >= endHour) return;
 
-  line.style.top = `${position}px`;
-}
+        const slotHeight = slots[0].offsetHeight;
+        const minutesPerSlot = 15;
+        const totalSlots = slots.length;
+        const position = (totalMinutes / minutesPerSlot) * slotHeight;
 
-updateTimeLine(); 
-setInterval(updateTimeLine, 1000); });
-</script>
+        let line = document.querySelector('.time-line');
+        if (!line) {
+          line = document.createElement('div');
+          line.className = 'time-line';
+          timetable.appendChild(line);
+        }
 
- 
+        line.style.top = `${position}px`;
+      }
+
+      updateTimeLine();
+      setInterval(updateTimeLine, 1000); // Jede Sekunde aktualisieren
+    });
+  </script>
+
 </body>
 </html>
